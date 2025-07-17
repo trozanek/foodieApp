@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Restauracja Pod Złotym Lwem",
+        "address": "ul. Złota 1, Warszawa",
+        "latitude": 52.2297,
+        "longitude": 21.0122
+    },
+    {
+        "name": "Kuchnia Polska",
+        "address": "ul. Polna 2, Kraków",
+        "latitude": 50.0614,
+        "longitude": 19.9383
+    },
+    {
+        "name": "Pizzeria Da Marco",
+        "address": "ul. Włoska 3, Wrocław",
+        "latitude": 51.1079,
+        "longitude": 17.0385
+    },
+    {
+        "name": "Sushi House",
+        "address": "ul. Japońska 4, Gdańsk",
+        "latitude": 54.3520,
+        "longitude": 18.6466
+    },
+    {
+        "name": "Bistro Francuskie",
+        "address": "ul. Francuska 5, Poznań",
+        "latitude": 52.4084,
+        "longitude": 16.9342
+    },
+    {
+        "name": "Taj Mahal",
+        "address": "ul. Indyjska 6, Łódź",
+        "latitude": 51.7592,
+        "longitude": 19.4560
+    },
+    {
+        "name": "Burger King",
+        "address": "ul. Fast Food 7, Katowice",
+        "latitude": 50.2649,
+        "longitude": 19.0238
+    },
+    {
+        "name": "Kebab House",
+        "address": "ul. Turecka 8, Lublin",
+        "latitude": 51.2465,
+        "longitude": 22.5684
+    },
+    {
+        "name": "Café Latte",
+        "address": "ul. Kawiarniana 9, Szczecin",
+        "latitude": 53.4285,
+        "longitude": 14.5528
+    },
+    {
+        "name": "Steak House",
+        "address": "ul. Mięsna 10, Białystok",
+        "latitude": 53.1325,
+        "longitude": 23.1688
+    }
+]
