@@ -2,6 +2,8 @@
 
 This project is a React application that displays a list of restaurants in Poland alongside a map. The map shows the user's location and markers for each restaurant. Users can select a restaurant from either the list or the map to view detailed information.
 
+> **Note**: This is a demo application for testing purposes.
+
 ## Features
 
 - Displays a list of restaurant locations on the left side.
