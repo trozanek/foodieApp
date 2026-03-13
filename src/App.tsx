@@ -8,17 +8,17 @@ import { Restaurant } from './types';
 const App: React.FC = () => {
     const [locations, setLocations] = useState<Restaurant[]>([]);
     const [selectedLocation, setSelectedLocation] = useState<Restaurant | null>(null);
-    const [userLocation, setUserLocation] = useState<GeolocationCoordinates | null>(null);
 
     useEffect(() => {
         setLocations(restaurantsData);
-        navigator.geolocation.getCurrentPosition((position) => {
-            setUserLocation(position.coords);
-        });
     }, []);
 
     const handleLocationSelect = (location: Restaurant) => {
         setSelectedLocation(location);
+    };
+
+    const handleCloseDetails = () => {
+        setSelectedLocation(null);
     };
 
     return (
@@ -28,15 +28,19 @@ const App: React.FC = () => {
                 selectedLocation={selectedLocation} 
                 onLocationSelect={handleLocationSelect} 
             />
-            {selectedLocation ? (
-                <LocationDetails location={selectedLocation} />
-            ) : (
+            <div style={{ flex: 1, position: 'relative' }}>
                 <MapView 
                     locations={locations} 
-                    userLocation={userLocation} 
+                    selectedLocation={selectedLocation}
                     onLocationSelect={handleLocationSelect} 
                 />
-            )}
+                {selectedLocation && (
+                    <LocationDetails 
+                        location={selectedLocation} 
+                        onClose={handleCloseDetails} 
+                    />
+                )}
+            </div>
         </div>
     );
 };
