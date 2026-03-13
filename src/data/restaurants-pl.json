@@ -1,61 +1,91 @@
 [
     {
+        "id": 1,
         "name": "Restauracja Pod Złotym Lwem",
         "address": "ul. Złota 1, Warszawa",
+        "description": "Traditional Polish cuisine in an elegant setting, famous for its golden lion decor and hearty regional dishes.",
+        "rating": 4.5,
         "latitude": 52.2297,
         "longitude": 21.0122
     },
     {
+        "id": 2,
         "name": "Kuchnia Polska",
         "address": "ul. Polna 2, Kraków",
+        "description": "Authentic Polish kitchen serving pierogi, bigos, and other classic dishes made with locally sourced ingredients.",
+        "rating": 4.7,
         "latitude": 50.0614,
         "longitude": 19.9383
     },
     {
+        "id": 3,
         "name": "Pizzeria Da Marco",
         "address": "ul. Włoska 3, Wrocław",
+        "description": "Neapolitan-style pizzeria with wood-fired oven, offering fresh Italian flavors in the heart of Wrocław.",
+        "rating": 4.3,
         "latitude": 51.1079,
         "longitude": 17.0385
     },
     {
+        "id": 4,
         "name": "Sushi House",
         "address": "ul. Japońska 4, Gdańsk",
+        "description": "Fresh sushi and Japanese specialties prepared by experienced chefs, with a cozy waterfront atmosphere.",
+        "rating": 4.6,
         "latitude": 54.3520,
         "longitude": 18.6466
     },
     {
+        "id": 5,
         "name": "Bistro Francuskie",
         "address": "ul. Francuska 5, Poznań",
+        "description": "A charming French bistro offering croque-monsieurs, escargot, and a curated selection of wines.",
+        "rating": 4.4,
         "latitude": 52.4084,
         "longitude": 16.9342
     },
     {
+        "id": 6,
         "name": "Taj Mahal",
         "address": "ul. Indyjska 6, Łódź",
+        "description": "Vibrant Indian restaurant known for aromatic curries, tandoori dishes, and freshly baked naan bread.",
+        "rating": 4.2,
         "latitude": 51.7592,
         "longitude": 19.4560
     },
     {
+        "id": 7,
         "name": "Burger King",
         "address": "ul. Fast Food 7, Katowice",
+        "description": "Popular fast food chain offering flame-grilled burgers, fries, and milkshakes.",
+        "rating": 3.5,
         "latitude": 50.2649,
         "longitude": 19.0238
     },
     {
+        "id": 8,
         "name": "Kebab House",
         "address": "ul. Turecka 8, Lublin",
+        "description": "Authentic Turkish kebabs with fresh vegetables, homemade sauces, and warm pita bread.",
+        "rating": 4.1,
         "latitude": 51.2465,
         "longitude": 22.5684
     },
     {
+        "id": 9,
         "name": "Café Latte",
         "address": "ul. Kawiarniana 9, Szczecin",
+        "description": "Cozy cafe serving specialty coffee, pastries, and light lunch options in a relaxed atmosphere.",
+        "rating": 4.0,
         "latitude": 53.4285,
         "longitude": 14.5528
     },
     {
+        "id": 10,
         "name": "Steak House",
         "address": "ul. Mięsna 10, Białystok",
+        "description": "Premium steakhouse featuring dry-aged beef, grilled to perfection with seasonal side dishes.",
+        "rating": 4.8,
         "latitude": 53.1325,
         "longitude": 23.1688
     }
