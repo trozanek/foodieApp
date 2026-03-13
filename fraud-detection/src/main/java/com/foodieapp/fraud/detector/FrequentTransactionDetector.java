@@ -84,8 +84,12 @@ public class FrequentTransactionDetector extends KeyedProcessFunction<String, Tr
 
     @Override
     public void onTimer(long timestamp, OnTimerContext ctx, Collector<FraudAlert> out) throws Exception {
-        // Clear state when the window expires
-        transactionCountState.clear();
-        windowStartState.clear();
+        // Only clear state if this timer belongs to the current window.
+        // A new window may have started before this timer fired.
+        Long windowStart = windowStartState.value();
+        if (windowStart != null && timestamp >= windowStart + windowMillis) {
+            transactionCountState.clear();
+            windowStartState.clear();
+        }
     }
 }

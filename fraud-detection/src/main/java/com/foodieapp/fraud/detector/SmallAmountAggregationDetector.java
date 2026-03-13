@@ -102,8 +102,13 @@ public class SmallAmountAggregationDetector extends KeyedProcessFunction<String,
 
     @Override
     public void onTimer(long timestamp, OnTimerContext ctx, Collector<FraudAlert> out) throws Exception {
-        runningSumState.clear();
-        transactionCountState.clear();
-        windowStartState.clear();
+        // Only clear state if this timer belongs to the current window.
+        // A new window may have started before this timer fired.
+        Long windowStart = windowStartState.value();
+        if (windowStart != null && timestamp >= windowStart + windowMillis) {
+            runningSumState.clear();
+            transactionCountState.clear();
+            windowStartState.clear();
+        }
     }
 }
