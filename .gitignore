@@ -1,1 +1,13 @@
 node_modules
+
+# Java / Maven
+fraud-detection/target/
+*.class
+
+# IDE
+.classpath
+.factorypath
+.project
+.settings/
+*.iml
+.idea/
