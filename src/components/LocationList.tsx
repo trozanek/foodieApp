@@ -3,8 +3,8 @@ import { Restaurant } from '../types';
 
 interface LocationListProps {
     locations: Restaurant[];
-    selectedLocationId: string | null;
-    onSelectLocation: (id: string) => void;
+    selectedLocationId: number | null;
+    onSelectLocation: (id: number) => void;
 }
 
 const LocationList: React.FC<LocationListProps> = ({ locations, selectedLocationId, onSelectLocation }) => {
@@ -18,7 +18,8 @@ const LocationList: React.FC<LocationListProps> = ({ locations, selectedLocation
                         onClick={() => onSelectLocation(location.id)}
                         className={selectedLocationId === location.id ? 'selected' : ''}
                     >
-                        {location.name}
+                        <span className="location-name">{location.name}</span>
+                        <span className="location-rating">{'★'} {location.rating.toFixed(1)}</span>
                     </li>
                 ))}
             </ul>
