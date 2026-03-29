@@ -32,6 +32,7 @@ export class Game {
   private camera: Camera;
   private gameState: GameState;
   private restartListenerBound: boolean = false;
+  private restartListener: ((e: KeyboardEvent) => void) | null = null;
   private startMusicListener: (() => void) | null = null;
 
   private level = createCathedralLevel();
@@ -104,6 +105,11 @@ export class Game {
       window.removeEventListener('keydown', this.startMusicListener);
       window.removeEventListener('click', this.startMusicListener);
       this.startMusicListener = null;
+    }
+    if (this.restartListener) {
+      window.removeEventListener('keydown', this.restartListener);
+      this.restartListener = null;
+      this.restartListenerBound = false;
     }
     this.audio.stopMusic();
     this.input.destroy();
@@ -534,14 +540,15 @@ export class Game {
     // Listen for restart (only bind once to avoid listener leak)
     if (!this.restartListenerBound) {
       this.restartListenerBound = true;
-      const handleRestart = (e: KeyboardEvent) => {
+      this.restartListener = (e: KeyboardEvent) => {
         if (e.code === 'KeyR') {
-          window.removeEventListener('keydown', handleRestart);
+          window.removeEventListener('keydown', this.restartListener!);
+          this.restartListener = null;
           this.restartListenerBound = false;
           this.restart();
         }
       };
-      window.addEventListener('keydown', handleRestart);
+      window.addEventListener('keydown', this.restartListener);
     }
   }
 
