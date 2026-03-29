@@ -3,8 +3,8 @@ import { Restaurant } from '../types';
 
 interface LocationListProps {
     locations: Restaurant[];
-    selectedLocationId: string | null;
-    onSelectLocation: (id: string) => void;
+    selectedLocationId: number | null;
+    onSelectLocation: (id: number) => void;
 }
 
 const LocationList: React.FC<LocationListProps> = ({ locations, selectedLocationId, onSelectLocation }) => {
