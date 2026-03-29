@@ -127,35 +127,35 @@ export function createCathedralLevel(): LevelData {
 
   // Enemy spawns distributed across all levels
   const enemySpawns = [
-    // Ground floor enemies
-    { x: 600, y: GROUND_Y - 40, type: 'demon' as const, patrolRange: 150 },
-    { x: 1100, y: GROUND_Y - 40, type: 'knight' as const, patrolRange: 100 },
-    { x: 1900, y: GROUND_Y - 40, type: 'demon' as const, patrolRange: 200 },
-    { x: 2500, y: GROUND_Y - 40, type: 'fiend' as const, patrolRange: 150 },
-    { x: 3000, y: GROUND_Y - 40, type: 'knight' as const, patrolRange: 120 },
-    { x: 3900, y: GROUND_Y - 40, type: 'demon' as const, patrolRange: 180 },
-    { x: 4400, y: GROUND_Y - 40, type: 'knight' as const, patrolRange: 100 },
+    // Ground floor enemies (y = GROUND_Y - 74 so enemy bottom is 10px above ground)
+    { x: 600, y: GROUND_Y - 74, type: 'demon' as const, patrolRange: 150 },
+    { x: 1100, y: GROUND_Y - 74, type: 'knight' as const, patrolRange: 100 },
+    { x: 1900, y: GROUND_Y - 74, type: 'demon' as const, patrolRange: 200 },
+    { x: 2500, y: GROUND_Y - 74, type: 'fiend' as const, patrolRange: 150 },
+    { x: 3000, y: GROUND_Y - 74, type: 'knight' as const, patrolRange: 120 },
+    { x: 3900, y: GROUND_Y - 74, type: 'demon' as const, patrolRange: 180 },
+    { x: 4400, y: GROUND_Y - 74, type: 'knight' as const, patrolRange: 100 },
 
     // Balcony 1 enemies
-    { x: 500, y: BALCONY_1_Y - 40, type: 'demon' as const, patrolRange: 120 },
-    { x: 1000, y: BALCONY_1_Y - 40, type: 'knight' as const, patrolRange: 100 },
-    { x: 2000, y: BALCONY_1_Y - 40, type: 'fiend' as const, patrolRange: 150 },
-    { x: 3100, y: BALCONY_1_Y - 40, type: 'demon' as const, patrolRange: 130 },
-    { x: 4300, y: BALCONY_1_Y - 40, type: 'knight' as const, patrolRange: 100 },
+    { x: 500, y: BALCONY_1_Y - 74, type: 'demon' as const, patrolRange: 120 },
+    { x: 1000, y: BALCONY_1_Y - 74, type: 'knight' as const, patrolRange: 100 },
+    { x: 2000, y: BALCONY_1_Y - 74, type: 'fiend' as const, patrolRange: 150 },
+    { x: 3100, y: BALCONY_1_Y - 74, type: 'demon' as const, patrolRange: 130 },
+    { x: 4300, y: BALCONY_1_Y - 74, type: 'knight' as const, patrolRange: 100 },
 
     // Balcony 2 enemies
-    { x: 400, y: BALCONY_2_Y - 40, type: 'knight' as const, patrolRange: 100 },
-    { x: 1300, y: BALCONY_2_Y - 40, type: 'fiend' as const, patrolRange: 120 },
-    { x: 2300, y: BALCONY_2_Y - 40, type: 'demon' as const, patrolRange: 150 },
-    { x: 3700, y: BALCONY_2_Y - 40, type: 'knight' as const, patrolRange: 100 },
-    { x: 4300, y: BALCONY_2_Y - 40, type: 'demon' as const, patrolRange: 130 },
+    { x: 400, y: BALCONY_2_Y - 74, type: 'knight' as const, patrolRange: 100 },
+    { x: 1300, y: BALCONY_2_Y - 74, type: 'fiend' as const, patrolRange: 120 },
+    { x: 2300, y: BALCONY_2_Y - 74, type: 'demon' as const, patrolRange: 150 },
+    { x: 3700, y: BALCONY_2_Y - 74, type: 'knight' as const, patrolRange: 100 },
+    { x: 4300, y: BALCONY_2_Y - 74, type: 'demon' as const, patrolRange: 130 },
   ];
 
   return {
     width: LEVEL_WIDTH,
     height: LEVEL_HEIGHT,
     platforms,
-    spawnPoint: { x: 100, y: GROUND_Y - 60 },
+    spawnPoint: { x: 100, y: GROUND_Y - 90 },
     enemySpawns,
     decorations,
   };
