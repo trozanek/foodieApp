@@ -314,13 +314,10 @@ export class Game {
     const targetZoom = this.zoomActive ? this.ZOOM_FACTOR : 1;
     this.zoomLevel += (targetZoom - this.zoomLevel) * 0.1;
 
-    // Effective camera size based on zoom
-    const effectiveWidth = this.camera.width / this.zoomLevel;
-    const effectiveHeight = this.camera.height / this.zoomLevel;
-
-    // Follow player - center on player when zoomed
-    this.camera.targetX = this.player.x + this.player.width / 2 - effectiveWidth / 2;
-    this.camera.targetY = this.player.y + this.player.height / 2 - effectiveHeight / 2;
+    // Center camera on player using full camera dimensions (the Renderer's
+    // canvas zoom transform already handles the visual zoom effect)
+    this.camera.targetX = this.player.x + this.player.width / 2 - this.camera.width / 2;
+    this.camera.targetY = this.player.y + this.player.height / 2 - this.camera.height / 2;
 
     // Bias camera slightly ahead in movement direction (reduced when zoomed)
     const biasAmount = 100 / this.zoomLevel;
@@ -334,9 +331,17 @@ export class Game {
     this.camera.x += (this.camera.targetX - this.camera.x) * 0.08;
     this.camera.y += (this.camera.targetY - this.camera.y) * 0.08;
 
-    // Clamp camera to level bounds
-    this.camera.x = Math.max(0, Math.min(this.level.width - effectiveWidth, this.camera.x));
-    this.camera.y = Math.max(0, Math.min(this.level.height - effectiveHeight, this.camera.y));
+    // Clamp camera so the visible area (smaller when zoomed) stays within level bounds.
+    // The zoom transform scales from canvas center, so visible world region is:
+    //   [camera.x + W/2 - W/(2*zoom), camera.x + W/2 + W/(2*zoom)]
+    const halfVisibleW = this.camera.width / (2 * this.zoomLevel);
+    const halfVisibleH = this.camera.height / (2 * this.zoomLevel);
+    const minX = halfVisibleW - this.camera.width / 2;
+    const maxX = this.level.width - this.camera.width / 2 - halfVisibleW;
+    this.camera.x = Math.max(minX, Math.min(maxX, this.camera.x));
+    const minY = halfVisibleH - this.camera.height / 2;
+    const maxY = this.level.height - this.camera.height / 2 - halfVisibleH;
+    this.camera.y = Math.max(minY, Math.min(maxY, this.camera.y));
   }
 
   private shakeCamera(amount: number, duration: number): void {
