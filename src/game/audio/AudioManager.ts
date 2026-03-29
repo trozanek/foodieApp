@@ -635,6 +635,7 @@ export class AudioManager {
 
   destroy(): void {
     this.stopMusic();
+    this.masterGain = null;
     if (this.ctx) {
       this.ctx.close();
       this.ctx = null;
