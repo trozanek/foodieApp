@@ -24,7 +24,7 @@ export const GUNS: Record<GunType, Gun> = {
   railgun: {
     type: 'railgun',
     name: 'Railgun',
-    damage: 3,
+    damage: 1,
     fireRate: 1200,
     projectileSpeed: 25,
     projectileColor: '#00aaff',
@@ -44,7 +44,7 @@ export const GUNS: Record<GunType, Gun> = {
   rocket: {
     type: 'rocket',
     name: 'Rocket Launcher',
-    damage: 5,
+    damage: 1,
     fireRate: 800,
     projectileSpeed: 7,
     projectileColor: '#ff6600',

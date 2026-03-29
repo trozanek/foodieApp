@@ -6,6 +6,8 @@ export class Renderer {
   private ctx: CanvasRenderingContext2D;
   readonly width: number;
   readonly height: number;
+  private shakeOffsetX: number = 0;
+  private shakeOffsetY: number = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d');
@@ -22,9 +24,14 @@ export class Renderer {
     this.ctx.fillRect(0, 0, this.width, this.height);
   }
 
+  beginFrame(camera: Camera): void {
+    this.shakeOffsetX = camera.shakeAmount * (Math.random() - 0.5);
+    this.shakeOffsetY = camera.shakeAmount * (Math.random() - 0.5);
+  }
+
   drawSprite(sprite: Sprite, x: number, y: number, camera: Camera, scale: number = PIXEL_SCALE): void {
-    const sx = Math.floor(x - camera.x + camera.shakeAmount * (Math.random() - 0.5));
-    const sy = Math.floor(y - camera.y + camera.shakeAmount * (Math.random() - 0.5));
+    const sx = Math.floor(x - camera.x + this.shakeOffsetX);
+    const sy = Math.floor(y - camera.y + this.shakeOffsetY);
 
     for (let py = 0; py < sprite.height; py++) {
       for (let px = 0; px < sprite.width; px++) {
@@ -43,15 +50,15 @@ export class Renderer {
   }
 
   drawRect(x: number, y: number, w: number, h: number, color: string, camera: Camera): void {
-    const sx = Math.floor(x - camera.x);
-    const sy = Math.floor(y - camera.y);
+    const sx = Math.floor(x - camera.x + this.shakeOffsetX);
+    const sy = Math.floor(y - camera.y + this.shakeOffsetY);
     this.ctx.fillStyle = color;
     this.ctx.fillRect(sx, sy, w, h);
   }
 
   drawPlatform(platform: Platform, camera: Camera): void {
-    const sx = Math.floor(platform.x - camera.x);
-    const sy = Math.floor(platform.y - camera.y);
+    const sx = Math.floor(platform.x - camera.x + this.shakeOffsetX);
+    const sy = Math.floor(platform.y - camera.y + this.shakeOffsetY);
 
     if (platform.type === 'jumppad') {
       // Glowing green jump pad
@@ -107,8 +114,8 @@ export class Renderer {
   }
 
   drawDecoration(decoration: Decoration, camera: Camera): void {
-    const sx = Math.floor(decoration.x - camera.x);
-    const sy = Math.floor(decoration.y - camera.y);
+    const sx = Math.floor(decoration.x - camera.x + this.shakeOffsetX);
+    const sy = Math.floor(decoration.y - camera.y + this.shakeOffsetY);
 
     switch (decoration.type) {
       case 'pillar':
@@ -228,8 +235,8 @@ export class Renderer {
   }
 
   drawProjectile(proj: Projectile, camera: Camera): void {
-    const sx = Math.floor(proj.x - camera.x);
-    const sy = Math.floor(proj.y - camera.y);
+    const sx = Math.floor(proj.x - camera.x + this.shakeOffsetX);
+    const sy = Math.floor(proj.y - camera.y + this.shakeOffsetY);
     // Core
     this.ctx.fillStyle = proj.color;
     this.ctx.fillRect(sx, sy, proj.width, proj.height);
@@ -239,8 +246,8 @@ export class Renderer {
   }
 
   drawParticle(particle: Particle, camera: Camera): void {
-    const sx = Math.floor(particle.x - camera.x);
-    const sy = Math.floor(particle.y - camera.y);
+    const sx = Math.floor(particle.x - camera.x + this.shakeOffsetX);
+    const sy = Math.floor(particle.y - camera.y + this.shakeOffsetY);
     const alpha = 1 - particle.lifetime / particle.maxLifetime;
     this.ctx.globalAlpha = Math.max(0, alpha);
     this.ctx.fillStyle = particle.color;

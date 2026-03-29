@@ -312,6 +312,7 @@ export class Game {
 
   private render(): void {
     this.renderer.clear();
+    this.renderer.beginFrame(this.camera);
 
     // Background
     this.renderer.drawBackground(this.camera, this.level.width, this.level.height);
