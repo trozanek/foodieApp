@@ -128,6 +128,11 @@ export interface InputState {
   jump: boolean;
   shoot: boolean;
   switchWeapon: boolean;
+  mouseX: number;
+  mouseY: number;
+  mouseDown: boolean;
+  rightMouseDown: boolean;
+  aimAngle: number;
 }
 
 export interface GameState {
