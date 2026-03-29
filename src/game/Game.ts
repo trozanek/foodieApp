@@ -1,4 +1,4 @@
-import { Camera, Particle, Projectile, GameState } from './types';
+import { Camera, Particle, Projectile, GameState, PlayerState } from './types';
 import { GameLoop } from './engine/GameLoop';
 import { Input } from './engine/Input';
 import { rectsOverlap } from './engine/Physics';
@@ -36,7 +36,7 @@ export class Game {
   private startMusicListener: (() => void) | null = null;
 
   private level = createCathedralLevel();
-  private prevPlayerState: string = 'idle';
+  private prevPlayerState: PlayerState = 'idle';
   private zoomActive: boolean = false;
   private zoomLevel: number = 1;
   private readonly ZOOM_FACTOR: number = 2;

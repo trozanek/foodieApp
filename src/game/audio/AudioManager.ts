@@ -496,8 +496,8 @@ export class AudioManager {
         this.padFilter.frequency.setValueAtTime(cutoff, now);
       }
 
-      // Change bass note every beat
-      if (this.bassOsc) {
+      // Change bass note every beat (every 2nd 8th-note tick)
+      if (this.bassOsc && this.beatCount % 2 === 0) {
         const note = this.bassNotes[this.bassNoteIndex % this.bassNotes.length];
         this.bassOsc.frequency.setValueAtTime(note, now);
         this.bassNoteIndex++;
@@ -506,13 +506,13 @@ export class AudioManager {
       // Hi-hat on every beat (16th note feel at higher BPM)
       this.playHiHat(now);
 
-      // Kick on beats 1 and 3
-      if (this.beatCount % 4 === 0 || this.beatCount % 4 === 2) {
+      // Kick on beats 1 and 3 (8th-note ticks 0,4 in an 8-tick cycle)
+      if (this.beatCount % 8 === 0 || this.beatCount % 8 === 4) {
         this.playBeatKick(now);
       }
 
-      // Open hi-hat accent on beat 2 and 4 at higher tempos
-      if (this.currentBPM > 120 && (this.beatCount % 4 === 1 || this.beatCount % 4 === 3)) {
+      // Open hi-hat accent on beats 2 and 4 at higher tempos (ticks 2,6)
+      if (this.currentBPM > 120 && (this.beatCount % 8 === 2 || this.beatCount % 8 === 6)) {
         this.playOpenHiHat(now);
       }
 
