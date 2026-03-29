@@ -28,11 +28,15 @@ export class Input {
     window.addEventListener('mousemove', this.boundMouseMove);
     window.addEventListener('mousedown', this.boundMouseDown);
     window.addEventListener('mouseup', this.boundMouseUp);
-    window.addEventListener('contextmenu', this.boundContextMenu);
   }
 
   setCanvas(canvas: HTMLCanvasElement): void {
     this.canvas = canvas;
+    // Initialize mouse to canvas center for sensible default aim
+    this.mouseX = canvas.width / 2;
+    this.mouseY = canvas.height / 2;
+    // Scope context menu prevention to canvas only
+    canvas.addEventListener('contextmenu', this.boundContextMenu);
   }
 
   private handleKeyDown(e: KeyboardEvent): void {
@@ -106,6 +110,8 @@ export class Input {
     window.removeEventListener('mousemove', this.boundMouseMove);
     window.removeEventListener('mousedown', this.boundMouseDown);
     window.removeEventListener('mouseup', this.boundMouseUp);
-    window.removeEventListener('contextmenu', this.boundContextMenu);
+    if (this.canvas) {
+      this.canvas.removeEventListener('contextmenu', this.boundContextMenu);
+    }
   }
 }
