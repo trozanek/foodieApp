@@ -2,25 +2,25 @@ import { Camera, Particle, Projectile, GameState } from './types';
 import { GameLoop } from './engine/GameLoop';
 import { Input } from './engine/Input';
 import { rectsOverlap } from './engine/Physics';
-import { Renderer } from './rendering/Renderer';
+import { Renderer3D } from './rendering/Renderer3D';
 import { Player } from './entities/Player';
 import { Enemy } from './entities/Enemy';
 import { createCathedralLevel } from './level/CathedralLevel';
 import { AudioManager } from './audio/AudioManager';
 import {
-  PLAYER_IDLE_RIGHT,
-  PLAYER_IDLE_LEFT,
-  PLAYER_RUN_RIGHT_1,
-  PLAYER_RUN_RIGHT_2,
-  PLAYER_JUMP_RIGHT,
-  DEMON_SPRITE,
-  KNIGHT_SPRITE,
-  FIEND_SPRITE,
-} from './rendering/sprites';
+  PLAYER_IDLE_RIGHT_3D,
+  PLAYER_IDLE_LEFT_3D,
+  PLAYER_RUN_RIGHT_1_3D,
+  PLAYER_RUN_RIGHT_2_3D,
+  PLAYER_JUMP_RIGHT_3D,
+  DEMON_SPRITE_3D,
+  KNIGHT_SPRITE_3D,
+  FIEND_SPRITE_3D,
+} from './rendering/sprites3D';
 
 export class Game {
   private canvas: HTMLCanvasElement;
-  private renderer: Renderer;
+  private renderer: Renderer3D;
   private input: Input;
   private gameLoop: GameLoop;
   private audio: AudioManager;
@@ -44,7 +44,7 @@ export class Game {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.renderer = new Renderer(canvas);
+    this.renderer = new Renderer3D(canvas);
     this.input = new Input();
     this.input.setCanvas(canvas);
     this.audio = new AudioManager();
@@ -120,6 +120,7 @@ export class Game {
     this.audio.stopMusic();
     this.input.destroy();
     this.audio.destroy();
+    this.renderer.dispose();
   }
 
   private update(dt: number): void {
@@ -399,16 +400,16 @@ export class Game {
     // Crosshair
     this.renderCrosshair();
 
-    // End zoom transform before drawing HUD
-    this.renderer.endFrame();
-
-    // HUD (drawn in screen space, unaffected by zoom)
+    // HUD (drawn on 2D overlay canvas inside renderer)
     this.renderHUD();
 
     // Game over screen
     if (!this.gameState.running) {
       this.renderGameOver();
     }
+
+    // End frame - renders everything including HUD overlay
+    this.renderer.endFrame();
   }
 
   private renderCrosshair(): void {
@@ -425,47 +426,47 @@ export class Game {
       return; // Skip rendering for blink effect
     }
 
-    let sprite = PLAYER_IDLE_RIGHT;
+    let sprite = PLAYER_IDLE_RIGHT_3D;
 
     if (this.player.direction === 'right') {
       switch (this.player.state) {
         case 'idle':
-          sprite = PLAYER_IDLE_RIGHT;
+          sprite = PLAYER_IDLE_RIGHT_3D;
           break;
         case 'running':
-          sprite = this.player.animFrame === 0 ? PLAYER_RUN_RIGHT_1 : PLAYER_RUN_RIGHT_2;
+          sprite = this.player.animFrame === 0 ? PLAYER_RUN_RIGHT_1_3D : PLAYER_RUN_RIGHT_2_3D;
           break;
         case 'jumping':
         case 'falling':
-          sprite = PLAYER_JUMP_RIGHT;
+          sprite = PLAYER_JUMP_RIGHT_3D;
           break;
         default:
-          sprite = PLAYER_IDLE_RIGHT;
+          sprite = PLAYER_IDLE_RIGHT_3D;
       }
     } else {
       // For left-facing, use mirrored sprites
       switch (this.player.state) {
         case 'idle':
-          sprite = PLAYER_IDLE_LEFT;
+          sprite = PLAYER_IDLE_LEFT_3D;
           break;
         case 'running':
-          sprite = this.player.animFrame === 0 ? PLAYER_RUN_RIGHT_1 : PLAYER_RUN_RIGHT_2;
+          sprite = this.player.animFrame === 0 ? PLAYER_RUN_RIGHT_1_3D : PLAYER_RUN_RIGHT_2_3D;
           // Mirror by rendering backwards
           sprite = this.mirrorSprite(sprite);
           break;
         case 'jumping':
         case 'falling':
-          sprite = this.mirrorSprite(PLAYER_JUMP_RIGHT);
+          sprite = this.mirrorSprite(PLAYER_JUMP_RIGHT_3D);
           break;
         default:
-          sprite = PLAYER_IDLE_LEFT;
+          sprite = PLAYER_IDLE_LEFT_3D;
       }
     }
 
     this.renderer.drawSprite(sprite, this.player.x, this.player.y, this.camera);
   }
 
-  private mirrorSprite(sprite: typeof PLAYER_IDLE_RIGHT): typeof PLAYER_IDLE_RIGHT {
+  private mirrorSprite(sprite: typeof PLAYER_IDLE_RIGHT_3D): typeof PLAYER_IDLE_RIGHT_3D {
     return {
       width: sprite.width,
       height: sprite.height,
@@ -477,13 +478,13 @@ export class Game {
     let sprite;
     switch (enemy.type) {
       case 'demon':
-        sprite = DEMON_SPRITE;
+        sprite = DEMON_SPRITE_3D;
         break;
       case 'knight':
-        sprite = KNIGHT_SPRITE;
+        sprite = KNIGHT_SPRITE_3D;
         break;
       case 'fiend':
-        sprite = FIEND_SPRITE;
+        sprite = FIEND_SPRITE_3D;
         break;
     }
 

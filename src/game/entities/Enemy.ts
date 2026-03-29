@@ -12,8 +12,8 @@ const ENEMY_CONFIGS: Record<EnemyType, {
   color: string;
 }> = {
   demon: {
-    width: 21, // 7 * 3
-    height: 30, // 10 * 3
+    width: 48, // 12 * 4 (3D scale)
+    height: 64, // 16 * 4 (3D scale)
     speed: 2,
     attackRange: 60,
     attackCooldown: 1500,
@@ -22,8 +22,8 @@ const ENEMY_CONFIGS: Record<EnemyType, {
     color: '#cc0000',
   },
   knight: {
-    width: 21,
-    height: 30,
+    width: 48, // 12 * 4 (3D scale)
+    height: 64, // 16 * 4 (3D scale)
     speed: 1.5,
     attackRange: 80,
     attackCooldown: 2000,
@@ -32,8 +32,8 @@ const ENEMY_CONFIGS: Record<EnemyType, {
     color: '#aaaaaa',
   },
   fiend: {
-    width: 24, // 8 * 3
-    height: 30,
+    width: 56, // 14 * 4 (3D scale)
+    height: 64, // 16 * 4 (3D scale)
     speed: 3.5,
     attackRange: 120,
     attackCooldown: 2500,
