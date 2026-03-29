@@ -4,8 +4,8 @@ import { GUNS } from './Guns';
 
 const PLAYER_SPEED = 4.5;
 const JUMP_FORCE = -12;
-const PLAYER_WIDTH = 27; // 9 pixels * 3 scale
-const PLAYER_HEIGHT = 42; // 14 pixels * 3 scale
+const PLAYER_WIDTH = 64; // 16 pixels * 4 scale (3D)
+const PLAYER_HEIGHT = 80; // 20 pixels * 4 scale (3D)
 const MAX_HEALTH = 100;
 
 export class Player {
