@@ -242,7 +242,7 @@ export class Renderer {
     const sx = Math.floor(particle.x - camera.x);
     const sy = Math.floor(particle.y - camera.y);
     const alpha = 1 - particle.lifetime / particle.maxLifetime;
-    this.ctx.globalAlpha = Math.max(0, 1 - alpha);
+    this.ctx.globalAlpha = Math.max(0, alpha);
     this.ctx.fillStyle = particle.color;
     this.ctx.fillRect(sx, sy, particle.size, particle.size);
     this.ctx.globalAlpha = 1;

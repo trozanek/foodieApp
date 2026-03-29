@@ -32,6 +32,7 @@ export class Game {
   private camera: Camera;
   private gameState: GameState;
   private restartListenerBound: boolean = false;
+  private startMusicListener: (() => void) | null = null;
 
   private level = createCathedralLevel();
 
@@ -87,17 +88,23 @@ export class Game {
   start(): void {
     this.gameLoop.start();
     // Start music on first user interaction (browser policy)
-    const startMusic = () => {
+    this.startMusicListener = () => {
       this.audio.startMusic();
-      window.removeEventListener('keydown', startMusic);
-      window.removeEventListener('click', startMusic);
+      window.removeEventListener('keydown', this.startMusicListener!);
+      window.removeEventListener('click', this.startMusicListener!);
+      this.startMusicListener = null;
     };
-    window.addEventListener('keydown', startMusic);
-    window.addEventListener('click', startMusic);
+    window.addEventListener('keydown', this.startMusicListener);
+    window.addEventListener('click', this.startMusicListener);
   }
 
   stop(): void {
     this.gameLoop.stop();
+    if (this.startMusicListener) {
+      window.removeEventListener('keydown', this.startMusicListener);
+      window.removeEventListener('click', this.startMusicListener);
+      this.startMusicListener = null;
+    }
     this.audio.stopMusic();
     this.input.destroy();
     this.audio.destroy();
