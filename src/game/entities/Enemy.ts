@@ -12,7 +12,7 @@ const ENEMY_CONFIGS: Record<EnemyType, {
   color: string;
 }> = {
   demon: {
-    width: 52, // 13 * 4 (3D scale)
+    width: 48, // 12 * 4 (3D scale)
     height: 64, // 16 * 4 (3D scale)
     speed: 2,
     attackRange: 60,

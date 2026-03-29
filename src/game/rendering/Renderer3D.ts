@@ -127,7 +127,10 @@ export class Renderer3D {
       const child = this.frameGroup.children[0];
       this.frameGroup.remove(child);
       if (child instanceof THREE.Mesh) {
-        // Return to pool or dispose
+        child.geometry.dispose();
+        if (child.material instanceof THREE.Material) {
+          child.material.dispose();
+        }
       }
     }
     this.rectPoolIndex = 0;

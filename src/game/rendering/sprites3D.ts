@@ -125,7 +125,7 @@ export const PLAYER_RUN_RIGHT_2_3D: Sprite = createSprite([
   '...P......P.....',
   '..P........P....',
   '..K........K....',
-  '..kk......kk...',
+  '..kk......kk....',
   '................',
   '................',
 ], playerPalette);
