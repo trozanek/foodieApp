@@ -31,6 +31,7 @@ export class Game {
   private particles: Particle[] = [];
   private camera: Camera;
   private gameState: GameState;
+  private restartListenerBound: boolean = false;
 
   private level = createCathedralLevel();
 
@@ -523,14 +524,18 @@ export class Game {
       14
     );
 
-    // Listen for restart
-    const handleRestart = (e: KeyboardEvent) => {
-      if (e.code === 'KeyR') {
-        window.removeEventListener('keydown', handleRestart);
-        this.restart();
-      }
-    };
-    window.addEventListener('keydown', handleRestart);
+    // Listen for restart (only bind once to avoid listener leak)
+    if (!this.restartListenerBound) {
+      this.restartListenerBound = true;
+      const handleRestart = (e: KeyboardEvent) => {
+        if (e.code === 'KeyR') {
+          window.removeEventListener('keydown', handleRestart);
+          this.restartListenerBound = false;
+          this.restart();
+        }
+      };
+      window.addEventListener('keydown', handleRestart);
+    }
   }
 
   private restart(): void {
@@ -540,6 +545,7 @@ export class Game {
     this.projectiles = [];
     this.particles = [];
     this.spawnEnemies();
+    this.restartListenerBound = false;
     this.gameState = {
       running: true,
       score: 0,
