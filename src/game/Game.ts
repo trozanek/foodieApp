@@ -1,4 +1,4 @@
-import { Camera, Particle, Projectile, GameState } from './types';
+import { Camera, Particle, Projectile, GameState, PlayerState } from './types';
 import { GameLoop } from './engine/GameLoop';
 import { Input } from './engine/Input';
 import { rectsOverlap } from './engine/Physics';
@@ -36,6 +36,7 @@ export class Game {
   private startMusicListener: (() => void) | null = null;
 
   private level = createCathedralLevel();
+  private prevPlayerState: PlayerState = 'idle';
   private zoomActive: boolean = false;
   private zoomLevel: number = 1;
   private readonly ZOOM_FACTOR: number = 2;
@@ -148,14 +149,25 @@ export class Game {
     // Handle zoom toggle
     this.zoomActive = inputState.rightMouseDown;
 
+    // Feed player movement speed to the dynamic music system
+    const playerSpeed = Math.abs(this.player.vx);
+    this.audio.setPlayerSpeed(playerSpeed);
+
     // Update player
     const playerResult = this.player.update(dt, inputState, this.level.platforms);
     this.projectiles.push(...playerResult.projectiles);
     this.particles.push(...playerResult.particles);
 
+    // Gun fire triggers a hard guitar riff
     if (playerResult.projectiles.length > 0) {
-      this.audio.playShoot();
+      this.audio.playGuitarRiff();
     }
+
+    // Jumping triggers a heavy drum hit
+    if (this.player.state === 'jumping' && this.prevPlayerState !== 'jumping') {
+      this.audio.playDrumHit();
+    }
+    this.prevPlayerState = this.player.state;
 
     // Check for jump pad sound
     if (playerResult.particles.some(p => p.color === '#00ff88')) {
@@ -264,7 +276,7 @@ export class Game {
             if (enemy.isDead()) {
               this.gameState.score += 100;
               this.gameState.enemiesKilled++;
-              this.audio.playExplosion();
+              this.audio.playKillFill();
               this.shakeCamera(4, 200);
             } else {
               this.audio.playHit();
@@ -618,6 +630,7 @@ export class Game {
     this.zoomActive = false;
     this.zoomLevel = 1;
     this.aimAngle = 0;
+    this.prevPlayerState = 'idle';
     this.gameState = {
       running: true,
       score: 0,
