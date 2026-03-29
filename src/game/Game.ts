@@ -180,7 +180,7 @@ export class Game {
     this.updateParticles(dt);
 
     // Update camera
-    this.updateCamera(inputState);
+    this.updateCamera();
 
     // Update camera shake
     if (this.camera.shakeTimer > 0) {
@@ -309,7 +309,7 @@ export class Game {
     }
   }
 
-  private updateCamera(inputState?: { rightMouseDown: boolean }): void {
+  private updateCamera(): void {
     // Smoothly interpolate zoom
     const targetZoom = this.zoomActive ? this.ZOOM_FACTOR : 1;
     this.zoomLevel += (targetZoom - this.zoomLevel) * 0.1;
@@ -609,6 +609,9 @@ export class Game {
     this.particles = [];
     this.spawnEnemies();
     this.restartListenerBound = false;
+    this.zoomActive = false;
+    this.zoomLevel = 1;
+    this.aimAngle = 0;
     this.gameState = {
       running: true,
       score: 0,
