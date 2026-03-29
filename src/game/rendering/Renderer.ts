@@ -24,9 +24,23 @@ export class Renderer {
     this.ctx.fillRect(0, 0, this.width, this.height);
   }
 
-  beginFrame(camera: Camera): void {
+  beginFrame(camera: Camera, zoomLevel: number = 1): void {
     this.shakeOffsetX = camera.shakeAmount * (Math.random() - 0.5);
     this.shakeOffsetY = camera.shakeAmount * (Math.random() - 0.5);
+
+    // Apply zoom transform: scale from center of canvas
+    if (zoomLevel !== 1) {
+      this.ctx.save();
+      this.ctx.translate(this.width / 2, this.height / 2);
+      this.ctx.scale(zoomLevel, zoomLevel);
+      this.ctx.translate(-this.width / 2, -this.height / 2);
+    } else {
+      this.ctx.save();
+    }
+  }
+
+  endFrame(): void {
+    this.ctx.restore();
   }
 
   drawSprite(sprite: Sprite, x: number, y: number, camera: Camera, scale: number = PIXEL_SCALE): void {
@@ -330,5 +344,30 @@ export class Renderer {
   drawScreenRect(x: number, y: number, w: number, h: number, color: string): void {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(x, y, w, h);
+  }
+
+  drawCrosshair(x: number, y: number, camera: Camera): void {
+    const sx = Math.floor(x - camera.x + this.shakeOffsetX);
+    const sy = Math.floor(y - camera.y + this.shakeOffsetY);
+    const radius = 4;
+
+    // Outer ring
+    this.ctx.beginPath();
+    this.ctx.arc(sx, sy, radius + 2, 0, Math.PI * 2);
+    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+    this.ctx.lineWidth = 2;
+    this.ctx.stroke();
+
+    // Red dot
+    this.ctx.beginPath();
+    this.ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+    this.ctx.fillStyle = '#ff0000';
+    this.ctx.fill();
+
+    // Bright center
+    this.ctx.beginPath();
+    this.ctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
+    this.ctx.fillStyle = '#ff6666';
+    this.ctx.fill();
   }
 }

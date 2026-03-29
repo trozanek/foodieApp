@@ -136,16 +136,22 @@ export class Player {
     if (input.shoot && now - this.lastFireTime > this.currentGun.fireRate) {
       this.lastFireTime = now;
       const gun = this.currentGun;
-      const dirMul = this.direction === 'right' ? 1 : -1;
+      const aimAngle = input.aimAngle;
+      const cosAim = Math.cos(aimAngle);
+      const sinAim = Math.sin(aimAngle);
+
+      // Update facing direction based on aim
+      this.direction = cosAim >= 0 ? 'right' : 'left';
 
       for (let i = 0; i < gun.projectilesPerShot; i++) {
         const spread = (Math.random() - 0.5) * gun.spread;
+        const angle = aimAngle + spread;
         const speed = gun.projectileSpeed;
         newProjectiles.push({
-          x: this.x + (this.direction === 'right' ? this.width : -8),
-          y: this.y + this.height / 2 - 3,
-          vx: speed * dirMul * Math.cos(spread),
-          vy: speed * Math.sin(spread),
+          x: this.x + this.width / 2 + cosAim * 16 - 4,
+          y: this.y + this.height / 2 + sinAim * 16 - 2,
+          vx: speed * Math.cos(angle),
+          vy: speed * Math.sin(angle),
           damage: gun.damage,
           color: gun.projectileColor,
           width: 8,
@@ -159,10 +165,10 @@ export class Player {
       // Muzzle flash particles
       for (let i = 0; i < 4; i++) {
         newParticles.push({
-          x: this.x + (this.direction === 'right' ? this.width + 4 : -8),
-          y: this.y + this.height / 2 - 2 + (Math.random() - 0.5) * 6,
-          vx: dirMul * (Math.random() * 3 + 1),
-          vy: (Math.random() - 0.5) * 2,
+          x: this.x + this.width / 2 + cosAim * 18,
+          y: this.y + this.height / 2 + sinAim * 18 + (Math.random() - 0.5) * 6,
+          vx: cosAim * (Math.random() * 3 + 1),
+          vy: sinAim * (Math.random() * 3 + 1) + (Math.random() - 0.5) * 2,
           color: gun.projectileColor,
           size: 2 + Math.random() * 2,
           lifetime: 0,

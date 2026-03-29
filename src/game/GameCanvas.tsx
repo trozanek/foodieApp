@@ -61,7 +61,7 @@ const GameCanvas: React.FC = () => {
         fontSize: '11px',
         marginTop: '8px',
       }}>
-        A/D: Move &bull; W/Space: Jump &bull; X: Shoot &bull; Q: Switch Weapon
+        A/D: Move &bull; W/Space: Jump &bull; LMB: Shoot &bull; RMB: Zoom &bull; Q: Switch Weapon
       </p>
     </div>
   );

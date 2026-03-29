@@ -36,11 +36,17 @@ export class Game {
   private startMusicListener: (() => void) | null = null;
 
   private level = createCathedralLevel();
+  private zoomActive: boolean = false;
+  private zoomLevel: number = 1;
+  private readonly ZOOM_FACTOR: number = 2;
+  private readonly CROSSHAIR_DISTANCE: number = 50;
+  private aimAngle: number = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.renderer = new Renderer(canvas);
     this.input = new Input();
+    this.input.setCanvas(canvas);
     this.audio = new AudioManager();
 
     // Initialize player at spawn point
@@ -122,6 +128,25 @@ export class Game {
     this.gameState.time += dt;
     const inputState = this.input.getState();
 
+    // Calculate aim angle from player center (in screen space) to mouse position
+    // Account for zoom: the canvas transform scales from center, so convert mouse
+    // position to the zoomed coordinate space
+    const canvasCenterX = this.canvas.width / 2;
+    const canvasCenterY = this.canvas.height / 2;
+    const adjustedMouseX = canvasCenterX + (inputState.mouseX - canvasCenterX) / this.zoomLevel;
+    const adjustedMouseY = canvasCenterY + (inputState.mouseY - canvasCenterY) / this.zoomLevel;
+
+    const playerScreenX = this.player.x + this.player.width / 2 - this.camera.x;
+    const playerScreenY = this.player.y + this.player.height / 2 - this.camera.y;
+    this.aimAngle = Math.atan2(
+      adjustedMouseY - playerScreenY,
+      adjustedMouseX - playerScreenX
+    );
+    inputState.aimAngle = this.aimAngle;
+
+    // Handle zoom toggle
+    this.zoomActive = inputState.rightMouseDown;
+
     // Update player
     const playerResult = this.player.update(dt, inputState, this.level.platforms);
     this.projectiles.push(...playerResult.projectiles);
@@ -155,7 +180,7 @@ export class Game {
     this.updateParticles(dt);
 
     // Update camera
-    this.updateCamera();
+    this.updateCamera(inputState);
 
     // Update camera shake
     if (this.camera.shakeTimer > 0) {
@@ -284,16 +309,25 @@ export class Game {
     }
   }
 
-  private updateCamera(): void {
-    // Follow player with smooth lerp
-    this.camera.targetX = this.player.x + this.player.width / 2 - this.camera.width / 2;
-    this.camera.targetY = this.player.y + this.player.height / 2 - this.camera.height / 2;
+  private updateCamera(inputState?: { rightMouseDown: boolean }): void {
+    // Smoothly interpolate zoom
+    const targetZoom = this.zoomActive ? this.ZOOM_FACTOR : 1;
+    this.zoomLevel += (targetZoom - this.zoomLevel) * 0.1;
 
-    // Bias camera slightly ahead in movement direction
+    // Effective camera size based on zoom
+    const effectiveWidth = this.camera.width / this.zoomLevel;
+    const effectiveHeight = this.camera.height / this.zoomLevel;
+
+    // Follow player - center on player when zoomed
+    this.camera.targetX = this.player.x + this.player.width / 2 - effectiveWidth / 2;
+    this.camera.targetY = this.player.y + this.player.height / 2 - effectiveHeight / 2;
+
+    // Bias camera slightly ahead in movement direction (reduced when zoomed)
+    const biasAmount = 100 / this.zoomLevel;
     if (this.player.direction === 'right') {
-      this.camera.targetX += 100;
+      this.camera.targetX += biasAmount;
     } else {
-      this.camera.targetX -= 100;
+      this.camera.targetX -= biasAmount;
     }
 
     // Smooth follow
@@ -301,8 +335,8 @@ export class Game {
     this.camera.y += (this.camera.targetY - this.camera.y) * 0.08;
 
     // Clamp camera to level bounds
-    this.camera.x = Math.max(0, Math.min(this.level.width - this.camera.width, this.camera.x));
-    this.camera.y = Math.max(0, Math.min(this.level.height - this.camera.height, this.camera.y));
+    this.camera.x = Math.max(0, Math.min(this.level.width - effectiveWidth, this.camera.x));
+    this.camera.y = Math.max(0, Math.min(this.level.height - effectiveHeight, this.camera.y));
   }
 
   private shakeCamera(amount: number, duration: number): void {
@@ -312,7 +346,7 @@ export class Game {
 
   private render(): void {
     this.renderer.clear();
-    this.renderer.beginFrame(this.camera);
+    this.renderer.beginFrame(this.camera, this.zoomLevel);
 
     // Background
     this.renderer.drawBackground(this.camera, this.level.width, this.level.height);
@@ -357,13 +391,27 @@ export class Game {
       this.renderer.drawParticle(particle, this.camera);
     }
 
-    // HUD
+    // Crosshair
+    this.renderCrosshair();
+
+    // End zoom transform before drawing HUD
+    this.renderer.endFrame();
+
+    // HUD (drawn in screen space, unaffected by zoom)
     this.renderHUD();
 
     // Game over screen
     if (!this.gameState.running) {
       this.renderGameOver();
     }
+  }
+
+  private renderCrosshair(): void {
+    const playerCenterX = this.player.x + this.player.width / 2;
+    const playerCenterY = this.player.y + this.player.height / 2;
+    const crosshairX = playerCenterX + Math.cos(this.aimAngle) * this.CROSSHAIR_DISTANCE;
+    const crosshairY = playerCenterY + Math.sin(this.aimAngle) * this.CROSSHAIR_DISTANCE;
+    this.renderer.drawCrosshair(crosshairX, crosshairY, this.camera);
   }
 
   private renderPlayer(): void {
@@ -495,8 +543,8 @@ export class Game {
 
     // Controls help (bottom of screen)
     this.renderer.drawText(
-      'A/D: Move  W/SPACE: Jump  X: Shoot  Q: Switch Gun',
-      this.renderer.width / 2 - 220, this.renderer.height - 14,
+      'A/D: Move  W/SPACE: Jump  LMB: Shoot  RMB: Zoom  Q: Switch Gun',
+      this.renderer.width / 2 - 240, this.renderer.height - 14,
       '#ffffff44', 11
     );
   }
