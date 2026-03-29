@@ -131,6 +131,11 @@ export class Player {
       this.currentGunIndex = (this.currentGunIndex + 1) % this.guns.length;
     }
 
+    // Update facing direction based on aim while shooting
+    if (input.shoot) {
+      this.direction = Math.cos(input.aimAngle) >= 0 ? 'right' : 'left';
+    }
+
     // Shooting
     const now = Date.now();
     if (input.shoot && now - this.lastFireTime > this.currentGun.fireRate) {
@@ -139,9 +144,6 @@ export class Player {
       const aimAngle = input.aimAngle;
       const cosAim = Math.cos(aimAngle);
       const sinAim = Math.sin(aimAngle);
-
-      // Update facing direction based on aim
-      this.direction = cosAim >= 0 ? 'right' : 'left';
 
       for (let i = 0; i < gun.projectilesPerShot; i++) {
         const spread = (Math.random() - 0.5) * gun.spread;
